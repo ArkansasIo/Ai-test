@@ -2,6 +2,12 @@ const routes = {
   chat: 'AI Chat', uml: 'UML Studio', sandbox: 'Sandbox', projects: 'Projects', teams: 'Agent Teams', workflows: 'Workflows', languages: 'Languages', tools: 'Tools', settings: 'Settings'
 };
 
+const platformState = {
+  mode: 'github-pages-demo',
+  pipeline: ['Agent', 'Team', 'Workflow', 'Model/Tool', 'Sandbox', 'Audit/Result'],
+  runs: 0
+};
+
 function openPanel(name) {
   const title = routes[name] || 'AI-Test';
   const status = document.getElementById('panelTitle');
@@ -20,21 +26,26 @@ function openPanel(name) {
     settings: ['Settings','Model providers, sandbox policies, permissions, themes, project defaults, tool access, and runtime configuration.']
   };
   const item = cards[name] || ['AI-Test','Modular AI development workspace.'];
-  body.innerHTML = `<h3>${item[0]}</h3><p>${item[1]}</p><div class="panel-actions"><button onclick="runDemo('Prototype')">Run prototype</button><button onclick="runDemo('Configure')">Configure</button></div>`;
-  document.getElementById('workspace').classList.add('open');
+  body.innerHTML = `<h3>${item[0]}</h3><p>${item[1]}</p><div class="panel-actions"><button onclick="runDemo('Prototype')">Run pipeline</button><button onclick="runDemo('Configure')">Configure</button></div>`;
+  document.getElementById('workspace')?.classList.add('open');
 }
 
 function runDemo(action) {
   const out = document.getElementById('demoStatus');
-  if (out) { out.hidden = false; out.textContent = `${action} action queued in prototype mode.`; }
+  platformState.runs += 1;
+  if (out) {
+    out.hidden = false;
+    out.textContent = `${action}: ${platformState.pipeline.join(' → ')} | run #${platformState.runs} | Pages demo mode`;
+  }
 }
 
 function runAssistant() {
   const p = document.getElementById('prompt');
   const s = document.getElementById('assistantStatus');
   if (!p || !s || !p.value.trim()) return;
+  platformState.runs += 1;
   s.hidden = false;
-  s.textContent = `● Prototype request queued: ${p.value.trim()}`;
+  s.textContent = `● Pipeline staged: Agent → Team → Workflow → Model/Tool → Sandbox → Audit/Result | run #${platformState.runs}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
