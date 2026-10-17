@@ -1,4 +1,4 @@
-export type WorkflowNodeType = 'start' | 'input' | 'model' | 'agent' | 'tool' | 'condition' | 'loop' | 'parallel' | 'memory-read' | 'memory-write' | 'end';
+export type WorkflowNodeType = 'start' | 'input' | 'model' | 'agent' | 'tool' | 'condition' | 'loop' | 'parallel' | 'memory-read' | 'memory-write' | 'sandbox' | 'end';
 
 export interface WorkflowNode {
   id: string;
