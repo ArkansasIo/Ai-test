@@ -18,3 +18,7 @@ export interface Workflow {
   nodes: WorkflowNode[];
   edges: WorkflowEdge[];
 }
+
+export * from './team-workflow';
+export * from './team-workflow-manager';
+export * from './task-editor';
