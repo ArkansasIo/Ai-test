@@ -1,6 +1,6 @@
 # UML Architecture Tree
 
-This document defines the UML-style node tree for the modular AI platform. It is intended to be the canonical map from folders to architectural components.
+This document defines the UML-style node tree for the modular AI platform. It is the canonical map from folders to architectural components.
 
 ```mermaid
 flowchart TD
@@ -10,6 +10,7 @@ flowchart TD
     ROOT --> CORE[Core Architecture]
     ROOT --> AGENTS[Agent Architecture]
     ROOT --> MODELS[Model Architecture]
+    ROOT --> LANG[Programming Languages]
     ROOT --> TOOLS[Tool Architecture]
     ROOT --> KNOW[Knowledge Architecture]
     ROOT --> MEMORY[Memory Architecture]
@@ -44,12 +45,23 @@ flowchart TD
     MODELS --> COMPAT[OpenAI-Compatible Provider]
     MODELS --> CUSTOM[Custom Provider]
 
+    LANG --> PROC25[ProC-25 Registry]
+    PROC25 --> NATIVE[Native / Systems]
+    PROC25 --> JVM[JVM Languages]
+    PROC25 --> WEBLANG[Web Languages]
+    PROC25 --> SCRIPT[Script Languages]
+    PROC25 --> SCI[Scientific Languages]
+    PROC25 --> DATA_LANG[SQL]
+    PROC25 --> TOOLCHAIN[Compiler / Runtime / Package / Debug / Test]
+    PROC25 --> WASM[WebAssembly Targets]
+
     TOOLS --> REG[Tool Registry]
     TOOLS --> MATH[Math Engine]
     TOOLS --> DICT[Dictionary Tool]
     TOOLS --> SEARCH[Search Tool]
     TOOLS --> FILES[File Tool]
     TOOLS --> EXEC[Execution Tool]
+    TOOLS --> CODEGEN[Code Generator]
 
     KNOW --> DICTIONARY[Multilingual Dictionary]
     KNOW --> MATHKB[Math Knowledge]
@@ -58,11 +70,11 @@ flowchart TD
 
     MEMORY --> SHORT[Short-Term Memory]
     MEMORY --> LONG[Long-Term Memory]
-    MEMORY --> VECTOR[Vector/Embedding Store]
+    MEMORY --> VECTOR[Vector / Embedding Store]
 
     WORK --> GRAPH[Workflow Graph]
     WORK --> ENGINE[Workflow Runtime]
-    WORK --> LOOP[Loop/Parallel Runtime]
+    WORK --> LOOP[Loop / Parallel Runtime]
     WORK --> CONDITIONS[Condition Runtime]
 
     TASK --> TREE[Task Tree]
@@ -74,15 +86,16 @@ flowchart TD
     SANDBOX --> DRIVER[Isolation Driver]
     SANDBOX --> POLICY[Sandbox Policy]
     SANDBOX --> AUDIT[Execution Audit]
+    SANDBOX --> LANGPROFILE[Language Toolchain Profile]
 
     SECURITY --> AUTH[Authentication]
-    SECURITY --> RBAC[Authorization/RBAC]
+    SECURITY --> RBAC[Authorization / RBAC]
     SECURITY --> SECRETS[Secret Management]
     SECURITY --> RATE[Rate Limiting]
     SECURITY --> THREAT[Threat Model]
 
     API --> HTTP[HTTP API]
-    API --> WS[WebSocket/SSE]
+    API --> WS[WebSocket / SSE]
     API --> CONTRACTS[API Contracts]
 
     DATA --> MYSQL[(MySQL)]
@@ -96,26 +109,12 @@ flowchart TD
     DOCS --> UML[UML]
     DOCS --> ADR[Architecture Decisions]
     DOCS --> RUNBOOK[Runbooks]
+    DOCS --> LANGDOC[Programming Language Matrix]
 ```
 
-## Node semantics
+## Language node semantics
 
-| Node | Responsibility | Primary children |
-|---|---|---|
-| AI Platform | Root architecture | Applications, Core, Agents, Models, Tools, Knowledge, Memory, Workflow, Task, Sandbox, Security, API, Data, Infrastructure |
-| Core | Stable domain contracts | Context, messages, results, events, config |
-| Agents | Autonomous task execution | Orchestrator, planner, coder, researcher, GitHub, tool agent |
-| Models | Inference abstraction | Router and providers |
-| Tools | Capability boundary | Registry, math, dictionary, search, files, execution |
-| Knowledge | Retrieval and domain data | Dictionary, math, documents, retrieval |
-| Memory | Conversation and durable state | Short-term, long-term, vector |
-| Workflow | Deterministic orchestration | Graph, runtime, loops, conditions |
-| Task | Work decomposition | Tree, queue, scheduler |
-| Sandbox | Untrusted execution boundary | Environment, virtual environment, driver, policy, audit |
-| Security | Trust boundary | Auth, RBAC, secrets, rate limits, threat model |
-| API | External interface | HTTP, streaming, contracts |
-| Data | Persistence | MySQL, cache, object storage |
-| Infrastructure | Deployment/runtime | Containers, CI, observability |
+The ProC-25 node is a capability registry, not a requirement that every compiler be installed on every machine. Each language profile declares its source extensions, toolchain, formatter, linter, debugger, test runner, build system, runtime, and sandbox requirements.
 
 ## Folder-to-node mapping
 
@@ -123,6 +122,7 @@ flowchart TD
 src/core       -> Core
 src/agents     -> Agents
 src/models     -> Models
+src/languages  -> Programming Languages / ProC-25
 src/tools      -> Tools
 src/knowledge  -> Knowledge
 src/memory     -> Memory
