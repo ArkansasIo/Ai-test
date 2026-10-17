@@ -26,16 +26,16 @@ const sandbox: SandboxEnvironment = {
   updatedAt: new Date().toISOString(),
 };
 
-function executor() {
+function makeExecutor() {
   const audit = new InMemoryAuditSink();
   const manager = new InMemorySandboxManager(new InMemorySandboxDriver());
-  return { audit, manager, executor: new WorkflowExecutor(new AgentRegistry(), new ToolRegistry(), audit, { sandbox: manager }) };
+  return { audit, manager, workflowExecutor: new WorkflowExecutor(new AgentRegistry(), new ToolRegistry(), audit, { sandbox: manager }) };
 }
 
 const context = { ai: { requestId: 'workflow-request', metadata: {} }, messages: [], variables: {} };
 
 test('workflow sandbox node executes through the sandbox manager and audits the result', async () => {
-  const { audit, manager, executor } = executor();
+  const { audit, manager, workflowExecutor } = makeExecutor();
   await manager.create(sandbox);
   await manager.start(sandbox.id);
 
@@ -45,26 +45,26 @@ test('workflow sandbox node executes through the sandbox manager and audits the 
     edges: [],
   };
 
-  const result = await executor.run(workflow, context);
+  const result = await workflowExecutor.run(workflow, context);
   assert.equal(result.ok, true);
   assert.equal((result.value?.run as { ok: boolean }).ok, false);
   assert.equal(audit.list('workflow-request').some((event) => event.type === 'sandbox'), true);
 });
 
 test('workflow rejects dependency cycles instead of executing them', async () => {
-  const { executor } = executor();
+  const { workflowExecutor } = makeExecutor();
   const workflow: Workflow = {
     id: 'cycle', name: 'Cycle',
     nodes: [{ id: 'a', type: 'input', config: {} }, { id: 'b', type: 'input', config: {} }],
     edges: [{ from: 'a', to: 'b' }, { from: 'b', to: 'a' }],
   };
-  const result = await executor.run(workflow, context);
+  const result = await workflowExecutor.run(workflow, context);
   assert.equal(result.ok, false);
   assert.equal(result.error?.code, 'workflow-cycle');
 });
 
 test('sandbox policy rejects a network-enabled virtual environment', async () => {
-  const { manager } = executor();
+  const { manager } = makeExecutor();
   const invalid = structuredClone(sandbox);
   invalid.id = 'invalid-network';
   invalid.virtualEnvironments[0].limits.networkEnabled = true;
@@ -72,7 +72,7 @@ test('sandbox policy rejects a network-enabled virtual environment', async () =>
 });
 
 test('sandbox execution rejects an unknown virtual environment', async () => {
-  const { manager } = executor();
+  const { manager } = makeExecutor();
   const environment = structuredClone(sandbox);
   environment.id = 'missing-ve';
   await manager.create(environment);
