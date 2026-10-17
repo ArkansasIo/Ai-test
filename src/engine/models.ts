@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import type { GenerateRequest, GenerateResponse } from './types.js';
 
 export interface ModelAdapter {
@@ -11,8 +12,7 @@ export class MockModelAdapter implements ModelAdapter {
   async generate(request: GenerateRequest): Promise<GenerateResponse> {
     const last = request.messages.at(-1)?.content ?? '';
     return {
-      id: crypto.randomUUID(),
-      model: request.model,
+      id: randomUUID(), model: request.model,
       message: { role: 'assistant', content: `Mock response: ${last}` },
       finishReason: 'stop',
       usage: { inputTokens: last.length, outputTokens: last.length, totalTokens: last.length * 2 },
@@ -31,7 +31,7 @@ export class OllamaAdapter implements ModelAdapter {
     });
     if (!response.ok) throw new Error(`Ollama request failed: ${response.status}`);
     const data = await response.json() as { model: string; message: { role: 'assistant'; content: string }; done?: boolean };
-    return { id: crypto.randomUUID(), model: data.model, message: data.message, finishReason: data.done === false ? 'length' : 'stop' };
+    return { id: randomUUID(), model: data.model, message: data.message, finishReason: data.done === false ? 'length' : 'stop' };
   }
 }
 
