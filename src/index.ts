@@ -8,3 +8,4 @@ export * from './tools/index';
 export * from './memory/index';
 export * from './sandbox/index';
 export * from './modules/index';
+export * from './languages/index';
