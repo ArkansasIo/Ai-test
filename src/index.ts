@@ -10,3 +10,6 @@ export * from './sandbox/index.js';
 export * from './modules/index.js';
 export * from './languages/index.js';
 export * from './api/index.js';
+export * from './audit/index.js';
+export * from './runtime/index.js';
+export * from './platform/index.js';
