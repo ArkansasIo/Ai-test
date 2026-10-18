@@ -1,33 +1,23 @@
-import { createEngine, type AgentRuntime } from '../engine/index.js';
-import type { ChatMessage } from '../engine/types.js';
-import type { AIResult } from '../core/index.js';
+import { createEngine } from '../engine/index.js';
+import type { AgentConfig, AgentRun } from '../engine/types.js';
 
 export interface RuntimeRequest {
-  agentId?: string;
-  messages: ChatMessage[];
+  agent: AgentConfig;
+  input: string;
   userId?: string;
-  projectId?: string;
 }
 
 export interface RuntimeService {
   readonly engine: ReturnType<typeof createEngine>;
-  run(request: RuntimeRequest): Promise<AIResult>;
+  run(request: RuntimeRequest): Promise<AgentRun>;
 }
 
 export function createRuntimeService(): RuntimeService {
   const engine = createEngine();
-  const agents = engine.agents as AgentRuntime;
-
   return {
     engine,
-    async run(request) {
-      const context = {
-        requestId: crypto.randomUUID(),
-        userId: request.userId,
-        projectId: request.projectId,
-        metadata: {},
-      };
-      return agents.run(request.messages, context);
+    run(request) {
+      return engine.agents.run(request.agent, request.input, request.userId);
     },
   };
 }
