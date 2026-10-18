@@ -14,3 +14,6 @@ export * from './audit/index.js';
 export * from './runtime/index.js';
 export * from './platform/index.js';
 export * from './engine/index.js';
+export * from './config/index.js';
+export * from './evaluation/index.js';
+export * from './plugins/index.js';
