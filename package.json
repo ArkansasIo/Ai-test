@@ -1,12 +1,14 @@
 {
   "name": "ai-test-platform",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "dev": "tsx src/demo.ts",
+    "dev:api": "tsx src/server/index.ts",
+    "start": "node dist/src/server/index.js",
     "test": "npm run build && node --test dist/src/testing"
   },
   "devDependencies": {
